@@ -18,7 +18,20 @@ gcc execpp.c -o execpp
 ```
 2. (Optional) Move the execpp executable to a directory in your system's PATH for global access.
 
-## Usage & Examples:
+## Usage:
+
+Basic syntax: `execpp [OPTIONS] <FILE>`
+
+| Option | Description |
+|--------|-------------|
+| `-c`, `--compile` | Compile the file only (don't run) |
+| `-r`, `--run` | Run the executable only (assumes already compiled) |
+| `-cr`, `--compile-run` | Compile and then run (default behavior) |
+| `--help` | Show help message |
+| `--version` | Show version information |
+
+## Examples:
+
 ### Compile and run 'hello.cpp'
 ```
 execpp hello.cpp
