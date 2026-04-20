@@ -185,16 +185,16 @@ void help() {
     puts("");
     printf(
         "Options:\n"
-        "  -cr, -rc, --compile-run    [by default] Compile and run specified cpp file\n"
-        "  -c, --compile              Compile specified cpp file\n"
-        "  -r, --run                  Run specified cpp file, with executable file compiled\n"
-        "      --help                 Display this help and exit"
-        "      --version              Show version number and quit"
+        "  -cr, --compile-run    [by default] Compile and run specified cpp file\n"
+        "  -c,  --compile              Compile specified cpp file\n"
+        "  -r,  --run                  Run specified cpp file, with executable file compiled\n"
+        "       --help                 Display this help and exit"
+        "       --version              Show version number and quit"
     );
 }
 
 void version() {
-    puts("execpp vesion 2.0.0");
+    puts("execpp vesion 2.0.1");
     puts("Copyright (c) 2026 EndDavid");
     puts("Licence: https://mit-license.org/");
 }
