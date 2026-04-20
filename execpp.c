@@ -185,11 +185,11 @@ void help() {
     puts("");
     puts(
         "Options:\n"
-        "  -cr, --compile-run          Compile and run specified cpp file [by default]\n"
-        "  -c,  --compile              Compile specified cpp file\n"
-        "  -r,  --run                  Run specified cpp file, with executable file compiled\n"
-        "       --help                 Display this help and exit\n"
-        "       --version              Show version number and quit\n"
+        "  -cr, --compile-run        Compile and run specified cpp file [by default]\n"
+        "  -c,  --compile            Compile specified cpp file\n"
+        "  -r,  --run                Run specified cpp file, with executable file compiled\n"
+        "       --help               Display this help and exit\n"
+        "       --version            Show version number and exit\n"
     );
 }
 
