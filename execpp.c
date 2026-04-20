@@ -162,7 +162,7 @@ ONLYRUN:
     system(strcat(AbsPath, FilenameNoExt));
 
     //free(FilenameExe);
-    free(AbsPath);
+    
 #else
     system(strcat(Exec, "\""));
     if(compile && !run) {
@@ -171,11 +171,16 @@ ONLYRUN:
     }
     // run...
 ONLYRUN:
-    system(FilenameNoExt);
+    char *AbsPath = (char *)malloc(fileLen + 10);
+    strcpy(AbsPath, "./");
+    system(strcat(AbsPath, FilenameNoExt));
 #endif // _WIN32
 
     if(compile) free(Exec);
-    if(run) free(FilenameNoExt);
+    if(run) {
+        free(AbsPath);
+        free(FilenameNoExt);
+    }
     return 0;
 }
 
