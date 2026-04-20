@@ -183,13 +183,13 @@ void help() {
     puts("Usage: execpp [OPTION]... <FILE>");
     puts("Compile and excute a single cpp file.");
     puts("");
-    printf(
+    puts(
         "Options:\n"
         "  -cr, --compile-run    [by default] Compile and run specified cpp file\n"
         "  -c,  --compile              Compile specified cpp file\n"
         "  -r,  --run                  Run specified cpp file, with executable file compiled\n"
-        "       --help                 Display this help and exit"
-        "       --version              Show version number and quit"
+        "       --help                 Display this help and exit\n"
+        "       --version              Show version number and quit\n"
     );
 }
 
