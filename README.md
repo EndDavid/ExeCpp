@@ -6,7 +6,7 @@ A lightweight tool to compile and run a single C++ file in one command.
 Execpp simplifies the process of quickly testing C++ code. Instead of manually running separate compile and execute commands, you can do it all at once.
 
 ## Features
-- One-Step Operation: Compiles and immediately executes your C++ file.
+- One-Step Operation: Compiles and immediately executes your C++ file. Choose to compile only, run only, or compile-and-run (default).
 - Automatic Detection: Recognizes common C++ file extensions (`.cpp`, `.cc`, `.cxx`).
 - Cross-Platform: Supports both Windows and Linux/macOS environments (handles .exe suffix and path separators automatically).
 - Simple: Minimal and straightforward to use.
