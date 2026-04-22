@@ -1,5 +1,6 @@
 # ExeCpp
-A lightweight tool to compile and run a single C++ file in one command.
+A lightweight tool to compile and run a single C++ file in one command.\
+_Now support C file. (>=2.2.0)_
 
 ## Overview
 
