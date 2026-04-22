@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <unistd.h>
 
 //#define aprintf(dest, ...) snprintf(dest + strlen(dest), sizeof(dest) - strlen(dest), __VA_ARGS__) // deprecated...
 
 #define _CUSTOM_COMPILER "g++"
 #define _CUSTOM_ARGS "-Wall -Wextra -std=c++23"
+#define _CUSTOM_COMPILER_GCC "gcc"
+#define _CUSTOM_ARGS_GCC "-Wall -Wextra -std=c23"
 
 void help();
 void version();
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]) {
 
 	// check file & help or version arg...
 
-	bool has_file = false;
+	bool has_file = false, c_lang = false;
 	char* dot;
 	int fi = -1;
 	for (int i = 1; i < argc; i++) {
@@ -77,12 +78,13 @@ int main(int argc, char *argv[]) {
                 continue;
 			}
 		}
-        char *extension[] = {".cpp", ".cc", ".cxx"};
-   		for (int j = 0; j < 3; j++) {
+        char *extension[] = {".cpp", ".cc", ".cxx", ".c"};
+   		for (int j = 0; j < 4; j++) {
     		if((dot = is_extension(argv[i], extension[j])) != NULL) {
             	has_file = true;
                 fi = i;
-				break;
+                if(is_extension(argv[i], ".c")) c_lang = true;
+                break;
         	}
    		}
 	}
@@ -125,8 +127,11 @@ int main(int argc, char *argv[]) {
 	else if(compile_run) compile = run = true;
 ARGCEQ2:
 
-	size_t fileLen = strlen(argv[fi]);
-    size_t cmdLen = strlen(_CUSTOM_COMPILER) + strlen(_CUSTOM_ARGS) + (fileLen << 1) + 50;
+    const char *_custom_compiler = (c_lang ? _CUSTOM_COMPILER_GCC : _CUSTOM_COMPILER);
+    const char *_custom_args = (c_lang ? _CUSTOM_ARGS_GCC : _CUSTOM_ARGS);
+
+    size_t fileLen = strlen(argv[fi]);
+    size_t cmdLen = strlen(_custom_compiler) + strlen(_custom_args) + (fileLen << 1) + 50;
     char *FilenameNoExt = (char *)malloc(fileLen + 1);
 
     strncpy(FilenameNoExt, argv[fi], dot - argv[fi]);
@@ -137,8 +142,8 @@ ARGCEQ2:
 	
 	// compile...
 
-    const char Prog[] = _CUSTOM_COMPILER;
-    const char Args[] = _CUSTOM_ARGS;
+    const char *Prog = _custom_compiler;
+    const char *Args = _custom_args;
     char *Exec = (char *)malloc(cmdLen);
 
     snprintf(Exec, cmdLen, "%s %s %s -o \"%s", Prog, Args, argv[fi], FilenameNoExt);
@@ -199,7 +204,7 @@ void help() {
 }
 
 void version() {
-    puts("execpp vesion 2.0.1");
+    puts("execpp vesion 2.2.0");
     puts("Copyright (c) 2026 EndDavid");
     puts("Licence: https://mit-license.org/");
 }
