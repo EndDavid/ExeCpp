@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 			return -1;
 		}
 	}
-	if((cri != -1) && (ci != -1) || (cri != -1) && (ri != -1)) {
+	if(((cri != -1) && (ci != -1)) || ((cri != -1) && (ri != -1))) {
         fputs("execpp: Invalid operation\n", stderr);
         puts("Use \"execpp --help\" for more information.");
 		return -1;
@@ -146,7 +146,9 @@ ARGCEQ2:
     const char *Args = _custom_args;
     char *Exec = (char *)malloc(cmdLen);
 
-    snprintf(Exec, cmdLen, "%s %s %s -o \"%s", Prog, Args, argv[fi], FilenameNoExt);
+    snprintf(Exec, cmdLen, "%s %s \"%s\" -o \"%s", Prog, Args, argv[fi], FilenameNoExt);
+    //printf("%s %s \"%s\" -o \"%s", Prog, Args, argv[fi], FilenameNoExt);
+    //return 0;
 
 #ifdef _WIN32
     system(strcat(Exec, ".exe\""));
