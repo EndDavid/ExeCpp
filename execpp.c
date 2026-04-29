@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-//#define aprintf(dest, ...) snprintf(dest + strlen(dest), sizeof(dest) - strlen(dest), __VA_ARGS__) // deprecated...
+#include "execpp_utils.h"
 
 #define _CUSTOM_COMPILER "g++"
 #define _CUSTOM_ARGS "-Wall -Wextra -std=c++23"
@@ -12,36 +12,6 @@
 
 void help();
 void version();
-
-char* is_extension(const char *filename, const char *extension) {
-    char* dot = strrchr(filename, '.');
-    if ((dot == NULL) || strcmp(dot, extension)) {
-        return NULL;
-    }
-    return dot;
-}
-bool is_valid_arg(const char *arg) {
-    const char *valid_args[] = {
-        "--version", "--help", "--compile", 
-        "--run", "--compile-run", "-c", "-r", "-cr", "-rc", NULL
-    };
-    
-    for (int i = 0; valid_args[i] != NULL; i++) {
-        if (!strcmp(arg, valid_args[i])) {
-            return true;
-        }
-    }
-    
-    return false;
-}
-int check_gpp() {
-#ifdef _WIN32
-    int result = system("g++ --version >nul 2>&1");
-#else
-    int result = system("g++ --version >/dev/null 2>&1");
-#endif // _WIN32
-    return result == 0;
-}
 
 int main(int argc, char *argv[]) {
 	//init...
@@ -78,15 +48,12 @@ int main(int argc, char *argv[]) {
                 continue;
 			}
 		}
-        char *extension[] = {".cpp", ".cc", ".cxx", ".c"};
-   		for (int j = 0; j < 4; j++) {
-    		if((dot = is_extension(argv[i], extension[j])) != NULL) {
-            	has_file = true;
-                fi = i;
-                if(is_extension(argv[i], ".c")) c_lang = true;
-                break;
-        	}
-   		}
+    	if(dot = is_extension_c_cpp(argv[i])) {
+        	has_file = true;
+            fi = i;
+            if(is_extension(argv[i], ".c")) c_lang = true;
+            break;
+        }
 	}
     if(!has_file) {
         fputs("execpp: No input file or invalid file format\n", stderr);
@@ -98,7 +65,7 @@ int main(int argc, char *argv[]) {
 
 	bool compile = false, run = false, compile_run = false;
 	int ci = -1, ri = -1, cri = -1;
-	if(argc == 2) { // when has file
+	if(argc == 2) { // when has_file
 		compile = run = true;
 		goto ARGCEQ2;
 	}
@@ -130,13 +97,20 @@ ARGCEQ2:
     const char *_custom_compiler = (c_lang ? _CUSTOM_COMPILER_GCC : _CUSTOM_COMPILER);
     const char *_custom_args = (c_lang ? _CUSTOM_ARGS_GCC : _CUSTOM_ARGS);
 
-    size_t fileLen = strlen(argv[fi]);
-    size_t cmdLen = strlen(_custom_compiler) + strlen(_custom_args) + (fileLen << 1) + 50;
-    char *FilenameNoExt = (char *)malloc(fileLen + 1);
+    char *FileCpp = (char *)malloc(strlen(argv[fi]) + 1);
+    strcpy(FileCpp, argv[fi]);
+    convert_to_real_path(FileCpp);
+    dot = is_extension_c_cpp(FileCpp);
 
-    strncpy(FilenameNoExt, argv[fi], dot - argv[fi]);
-    FilenameNoExt[dot - argv[fi]] = '\0';
-	if(run && !compile) {
+    size_t fileLen = strlen(FileCpp);
+    size_t cmdLen = strlen(_custom_compiler) + strlen(_custom_args) + (fileLen << 1) + 50;
+
+    char *FilenameNoExt = (char *)malloc(fileLen);
+
+    strncpy(FilenameNoExt, FileCpp, dot - FileCpp);
+    FilenameNoExt[dot - FileCpp] = '\0';
+
+    if(run && !compile) {
 		goto ONLYRUN;
 	}
 	
@@ -146,50 +120,46 @@ ARGCEQ2:
     const char *Args = _custom_args;
     char *Exec = (char *)malloc(cmdLen);
 
-    snprintf(Exec, cmdLen, "%s %s \"%s\" -o \"%s", Prog, Args, argv[fi], FilenameNoExt);
+    snprintf(Exec, cmdLen, "%s %s \"%s\" -o \"%s", Prog, Args, FileCpp, FilenameNoExt);
     //printf("%s %s \"%s\" -o \"%s", Prog, Args, argv[fi], FilenameNoExt);
     //return 0;
 
 #ifdef _WIN32
     system(strcat(Exec, ".exe\""));
     if(compile && !run) {
-        free(Exec);
-        return 0;
+        goto END_ONLYCOMPILE;
     }
-    /*
-    char *FilenameExe = (char *)malloc(fileLen + 5);
-    strcpy(FilenameExe, FilenameNoExt);
-    strcat(FilenameExe, ".exe");
-    */
 
     // run...
 ONLYRUN:
-    char *AbsPath = (char *)malloc(fileLen + 10);
-    strcpy(AbsPath, ".\\");
-    system(strcat(AbsPath, FilenameNoExt));
 
-    //free(FilenameExe);
-    
+    strfcat(FilenameNoExt, "\"");
+    strcat(FilenameNoExt, "\"");
+    system(FilenameNoExt);
+
 #else
     system(strcat(Exec, "\""));
     if(compile && !run) {
-        free(Exec);
-        return 0;
+        goto ONLYCOMPILE;
     }
     // run...
 ONLYRUN:
-    char *AbsPath = (char *)malloc(fileLen + 10);
-    strcpy(AbsPath, "./");
-    system(strcat(AbsPath, FilenameNoExt));
+
+    strfcat(FilenameNoExt, "\'");
+    strcat(FilenameNoExt, "\'");
+    system(FilenameNoExt);
+
 #endif // _WIN32
 
+END_ONLYCOMPILE:
+
     if(compile) free(Exec);
-    if(run) {
-        free(AbsPath);
-        free(FilenameNoExt);
-    }
+    free(FileCpp);
+    free(FilenameNoExt);
+
     return 0;
 }
+
 
 void help() {
     puts("Usage: execpp [OPTION]... <FILE>");
@@ -206,7 +176,7 @@ void help() {
 }
 
 void version() {
-    puts("execpp vesion 2.2.0");
+    puts("execpp vesion 2.3.0");
     puts("Copyright (c) 2026 EndDavid");
     puts("Licence: https://mit-license.org/");
 }
