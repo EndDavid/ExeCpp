@@ -1,5 +1,11 @@
 # ExeCpp
-A lightweight tool to compile and run a single C++ file in one command.\
+```bash
+# Assuming this is a program to print "hello world".
+execpp hello.cpp
+# result:
+# hello world
+```
+A lightweight tool to compile and run a **single** C++ file in one command, just like when you click "Compile and Run" in IDEs.\
 _Now support C file. (>=2.2.0)_
 
 ## Overview
@@ -14,13 +20,14 @@ Execpp simplifies the process of quickly testing C++ code. Instead of manually r
 
 ## Quick Start
 1. Compile execpp itself:
-```c
+```
 gcc execpp.c -o execpp
 ```
 2. (Optional) Move the execpp executable to a directory in your system's PATH for global access.
 
 ## Usage:
 
+Like IDEs, `execpp` provides "compile & run" / "compile" / "run" options.\
 Basic syntax: `execpp [OPTIONS] <FILE>`
 
 | Option | Description |
