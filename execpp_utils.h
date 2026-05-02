@@ -90,7 +90,6 @@ char* resolve_real_path(const char* path) {
     }
     free(win_path);
 
-    // 3. 返回结果
     result = (char*)malloc(needed + 1);
     if (result) strcpy(result, buffer);
     free(buffer);

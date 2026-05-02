@@ -6,9 +6,9 @@
 #include "execpp_utils.h"
 
 #define _CUSTOM_COMPILER "g++"
-#define _CUSTOM_ARGS "-Wall -Wextra -std=c++23"
+#define _CUSTOM_ARGS "-Wall -Wextra -std=gnu++23"
 #define _CUSTOM_COMPILER_GCC "gcc"
-#define _CUSTOM_ARGS_GCC "-Wall -Wextra -std=c23"
+#define _CUSTOM_ARGS_GCC "-Wall -Wextra -std=gnu2x"
 
 void help();
 void version();
@@ -140,7 +140,7 @@ ONLYRUN:
 #else
     system(strcat(Exec, "\""));
     if(compile && !run) {
-        goto ONLYCOMPILE;
+        goto END_ONLYCOMPILE;
     }
     // run...
 ONLYRUN:
