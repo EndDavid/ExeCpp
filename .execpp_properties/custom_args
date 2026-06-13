@@ -1,2 +1,2 @@
--Wall -Wextra -std=gnu++23
--Wall -Wextra -std=gnu2x
+-Wall -Wextra
+-Wall -Wextra
