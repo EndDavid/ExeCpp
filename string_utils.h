@@ -11,27 +11,50 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-char* strfcat(char *dest, char *src) {
-    char *newString = (char *)malloc(strlen(dest) + strlen(src) + 2);
+char* strfcat_realloc(char **dest, const char *src) {
+    if (!dest || !src) return dest ? *dest : NULL;
 
-    strcpy(newString, src);    // newString = src
-    strcat(newString, dest);   // newString += dest
-    strcpy(dest, newString);   // dest = newString
+    size_t len_src = strlen(src);
+    size_t len_dest = *dest ? strlen(*dest) : 0;
+    size_t new_size = len_src + len_dest + 1;
+
+    char *temp = realloc(*dest, new_size);
+    if (!temp) return NULL;
     
-    free(newString);
-    return dest;
+    *dest = temp;
+
+    if (len_dest > 0) {
+        memmove(*dest + len_src, *dest, len_dest + 1);
+    } else {
+        (*dest)[len_src] = '\0';
+    }
+
+    memcpy(*dest, src, len_src);
+
+    return *dest;
 }
+
+#define strfcat(dest, src) strfcat_realloc(&(dest), src)
 
 char* fgetl(FILE* stream) {
     if (!stream) return NULL;
 
     size_t capacity = 16;      // Initial buffer size
     size_t length   = 0;       // Number of characters read
+	
     char* buf = (char *)malloc(capacity);
     if (!buf) return NULL;
 
     int ch;
     while ((ch = fgetc(stream)) != EOF && ch != '\n') {
+		if (ch == '\r') {
+            int next_ch = fgetc(stream);
+            if (next_ch != '\n' && next_ch != EOF) {
+                ungetc(next_ch, stream); 
+            }
+            break;
+        }
+
         if (length + 1 >= capacity) {
             size_t new_cap = capacity << 1;
             char* tmp = (char *)realloc(buf, new_cap);

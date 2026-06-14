@@ -136,7 +136,7 @@ char* resolve_real_path(const char* path) {
     DWORD needed = 0;
 
     while(true) {
-        buffer = (char*)realloc(buffer, buf_size);
+        buffer = (char *)realloc(buffer, buf_size);
         if (!buffer) {
             free(win_path);
             return NULL;
@@ -159,21 +159,24 @@ char* resolve_real_path(const char* path) {
     return result;
 }
 #else // POSIX
-#define resolve_real_path(path) realpath((path), NULL);
+#define resolve_real_path(path) realpath((path), NULL)
 #endif // _WIN32
 
 #define convert_to_real_path(path) strcpy((path), resolve_real_path(path))
 
 #if VERIFY_GCC_EXIST
 int check_compiler(char *_compiler) {
-    char *_Compiler = (char *)malloc(strlen(_compiler) + 30);
-    strcpy(_Compiler, _compiler);
+    char *_Cmd = (char *)malloc(strlen(_compiler) + 30);
+    strcpy(_Cmd, _compiler);
 
 #ifdef _WIN32
-    int result = system(strcat(_Compiler, " --version >nul 2>&1"));
+    strcat(_Cmd, " --version >nul 2>&1");
 #else
-    int result = system(strcat(_Compiler, " --version >/dev/null 2>&1"));
+    strcat(_Cmd, " --version >/dev/null 2>&1");
 #endif // _WIN32
+
+    int result = system(_Cmd);
+    free(_Cmd);
 
     return result == 0;
 }
@@ -215,6 +218,8 @@ bool para_valid_gcc(char *_para) {
 #define para_valid_gcc(_para) true
 #endif
 
+#include <errno.h>
+
 int create_directory(const char *path) {
     return MKDIR(path) == 0 || errno == EEXIST ? 0 : -1;
 }
@@ -252,7 +257,7 @@ int verify_integrity() {
     FILE *fnote = fopen("./.execpp_properties/note", "w");
     fputs("For each config, C++ in line 1 and C in line 2.\n", fnote);
     fclose(fnote);
-    
+
     return 0;
 }
 

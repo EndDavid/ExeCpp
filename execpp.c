@@ -162,6 +162,11 @@ END_ONLYCOMPILE:
     free(FileCpp);
     free(FilenameNoExt);
 
+	free(_CUSTOM_COMPILER);
+	free(_CUSTOM_ARGS);
+	free(_CUSTOM_COMPILER_GCC);
+	free(_CUSTOM_ARGS_GCC);
+
 	return 0;
 }
 
@@ -258,14 +263,14 @@ _GCC_ARGS:
 void display_config() {
 #ifdef _WIN32
     puts("G++ & GCC compiler:");
-    system("type .\\.execpp_properties.\\custom_compiler");
+    system("type .\\.execpp_properties\\custom_compiler");
     puts("G++ & GCC compilation parameters:");
-    system("type .\\.execpp_properties.\\custom_args");
+    system("type .\\.execpp_properties\\custom_args");
 #else
     puts("G++ & GCC compiler:");
-    system("cat ./.execpp_properties./custom_compiler");
+    system("cat ./.execpp_properties/custom_compiler");
     puts("G++ & GCC compilation parameters:");
-    system("cat ./.execpp_properties./custom_args");
+    system("cat ./.execpp_properties/custom_args");
 #endif // _WIN32
 
     /*
