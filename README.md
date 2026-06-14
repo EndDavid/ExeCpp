@@ -50,10 +50,10 @@ execpp hello.cpp
 
 ## Program Flow:
 1.  You run execpp `your_file.cpp`.
-2.  It compiles `your_file.cpp` into an executable (e.g., `your_file` or `your_file.exe`) using `g++` with compilation parameters customed in `.execpp_properties/custom_args`.
+2.  It compiles `your_file.cpp` into an executable (e.g., `your_file` or `your_file.exe`) using `g++` with compilation parameters customized in `.execpp_properties/custom_args`.
 3.  It automatically runs the generated executable.
 
 ## Notes
-- This tool relies on `g++` being installed and available in your system's PATH. (_>=3.0.0 You can custom by editing `.execpp_properties/custom_compiler`_)
-- The compilation parameters and compilers can be customed by editing `.execpp_properties/custom_args`. (_>=3.0.0_)
+- This tool relies on `g++` being installed and available in your system's PATH. _If not, you can customize it by editing `.execpp_properties/custom_compiler`. (>=3.0.0)_
+- The compilation parameters and compilers can be customized by editing `.execpp_properties/custom_args`. (_>=3.0.0_)
 - It is designed for simplicity and quick testing, not for managing complex multi-file projects.
