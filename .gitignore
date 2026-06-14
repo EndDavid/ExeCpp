@@ -1,0 +1,13 @@
+Releases/
+.vscode/
+
+*.i
+
+hello.*
+utilstest.*
+
+execpp
+execpp.exe
+
+utilstest.*
+utilstest
